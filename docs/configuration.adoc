@@ -1,0 +1,25 @@
+= Configuration file
+
+== Reference
+
+=== services
+`root_url`: string
+
+Protocol, domain (and port) of the service.
+
+`root_path`: string
+
+URL path of the service (e.g. /map-service)
+
+`map_view_url`: string
+
+URL to map view application
+
+=== storage
+`type`: "sqlite"
+
+Currently only SQLite can be used as database.
+
+`database`: string
+
+Path to SQLite file.
