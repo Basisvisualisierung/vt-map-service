@@ -38,7 +38,7 @@ For a production environment you should deploy the service by a WSGI Server like
 
 **Start the container:**
 
-`docker run --rm -v ${PWD}/data:/service/data -p 5000:5000 vt-map-:latest`
+`docker run --rm -v ${PWD}/data:/service/data -p 5000:5000 vt-map-service:latest`
 
 ## License
 Licensed under the European Union Public License (EUPL). For more information see [LICENSE.txt](LICENSE.txt).
