@@ -1,5 +1,7 @@
 = Configuration file
 
+The configuration file `vt-map-service.yaml` is a regular YAML file. 
+
 == Reference
 
 === services
