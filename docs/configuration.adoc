@@ -2,6 +2,19 @@
 
 The configuration file `vt-map-service.yaml` is a regular YAML file. 
 
+== Template
+Here is a template for the configuration:
+
+```
+services:
+    root_url: http://localhost:5000
+    root_path: /map-service
+    map_view_url: http://localhost:4201
+storage:
+    type: sqlite
+    database: ./data/vt-map-service.db
+```
+
 == Reference
 
 === services

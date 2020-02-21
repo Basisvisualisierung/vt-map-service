@@ -1,6 +1,6 @@
 # VT Map Service
 
-Back end python service for VT Map Editor.
+Back-end python service for VT Map Editor.
 
 ## Getting started
 
@@ -8,7 +8,7 @@ You can follow these instructions to run VT Map Service on your local machine. A
 
 ### Prerequisites
 
-First you need to install a current version of Python 3 and the pip.
+First you need to install a current version of Python 3 and pip.
 
 ### Installation
 
