@@ -4,7 +4,7 @@ import yaml
 
 # Read configuration file
 with open('vt-map-service.yaml', 'r') as yaml_file:
-    config = yaml.load(yaml_file)
+    config = yaml.full_load(yaml_file)
 
 def init_db():
     """Create Database"""

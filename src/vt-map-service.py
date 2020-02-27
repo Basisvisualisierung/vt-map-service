@@ -21,7 +21,7 @@ service = Flask(__name__)
 
 # Read configuration file
 with open('vt-map-service.yaml', 'r') as yaml_file:
-    config = yaml.load(yaml_file)
+    config = yaml.full_load(yaml_file)
 
 @service.route(config['services']['root_path']  + "/map", methods=['POST'])
 @cross_origin(origins='http://localhost:4200', methods='POST')
