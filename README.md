@@ -54,6 +54,8 @@ Start a container:
 docker run --rm -v ${PWD}/data:/service/data -p 5000:5000 vt-map-service:latest
 ```
 
+For a complete development environment with Docker Compose see [Docker setup](https://github.com/Basisvisualisierung/vt-map-editor/blob/master/docs/docker-setup.adoc) of VT Map Editor.
+
 ## License
 Licensed under the European Union Public License (EUPL). For more information see [LICENSE.txt](LICENSE.txt).
 
