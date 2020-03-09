@@ -61,21 +61,22 @@ def get_map_config(id):
     """Get map configuration from database."""
     mapConfig = None
 
-    try:
-        conn = sqlite3.connect(config['storage']['database'])
-        cur = conn.cursor()
-        cur.execute('''SELECT configuration FROM maps WHERE id=?''',(id,))
-        data = cur.fetchone()
-        mapConfig = json.loads(data[0])
-        cur.close()
-    except Exception as e:
-        conn.rollback()
-    finally:
-        if conn is not None:
-            conn.close()
-    
-    if mapConfig is None or id is None:
-        abort(404)
+    if (is_valid_uuid(id)):
+        try:
+            conn = sqlite3.connect(config['storage']['database'])
+            cur = conn.cursor()
+            cur.execute('''SELECT configuration FROM maps WHERE id=?''',(id,))
+            data = cur.fetchone()
+            mapConfig = json.loads(data[0])
+            cur.close()
+        except Exception as e:
+            conn.rollback()
+        finally:
+            if conn is not None:
+                conn.close()
+        
+        if mapConfig is None or id is None:
+            abort(404)
     
     return jsonify(mapConfig)
 
@@ -85,21 +86,31 @@ def get_map_style(id):
     """Get map style from database."""
     data = None
     conn = None
-    try:
-        conn = sqlite3.connect(config['storage']['database'])
-        cur = conn.cursor()
-        cur.execute('''SELECT style FROM maps WHERE id=?''',(id,))
-        data = cur.fetchone()[0]
-        cur.close()
-    except Exception as e:
-        print(e)
-        conn.rollback()
-    finally:
-        if conn is not None:
-            conn.close()
+
+    if (is_valid_uuid(id)):
+        try:
+            conn = sqlite3.connect(config['storage']['database'])
+            cur = conn.cursor()
+            cur.execute('''SELECT style FROM maps WHERE id=?''',(id,))
+            data = cur.fetchone()[0]
+            cur.close()
+        except Exception as e:
+            print(e)
+            conn.rollback()
+        finally:
+            if conn is not None:
+                conn.close()
     
     return jsonify(json.loads(data))
 
+
+def is_valid_uuid(mapId):
+    """Validate UUID"""
+    try:
+        uuid.UUID(mapId)
+        return True
+    except ValueError:
+        return False
 
 def is_valid_config(mapConfig):
     """Validate map configuration"""
