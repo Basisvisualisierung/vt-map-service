@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------------
 # VT Map Service
-# Version 0.5.0
+# Version 1.0.0 beta
 # 
 # Copyright 2020 Landesamt für Geoinformation und Landesvermessung Niedersachsen
 # Licensed under the European Union Public License (EUPL)
@@ -49,9 +49,7 @@ def save_map():
             conn.close()
 
     if mapId is not None:
-        response_data = {'id': mapId,
-                         'style_url': config['services']['root_url'] + config['services']['root_path']  +  '/style/' + mapId, 
-                         'application_url': config['services']['map_view_url'] + '/' + mapId}
+        response_data = {'id': mapId}
 
     return jsonify(response_data)
 

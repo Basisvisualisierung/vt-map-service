@@ -7,9 +7,7 @@ Here is a template for the configuration:
 
 ```
 services:
-    root_url: http://localhost:5000
     root_path: /map-service
-    map_view_url: http://localhost:4201
 storage:
     type: sqlite
     database: ./data/vt-map-service.db
@@ -18,17 +16,9 @@ storage:
 == Reference
 
 === services
-`root_url`: string
-
-Protocol, domain (and port) of the service.
-
 `root_path`: string
 
 URL path of the service (e.g. /map-service)
-
-`map_view_url`: string
-
-URL to map view application
 
 === storage
 `type`: "sqlite"
