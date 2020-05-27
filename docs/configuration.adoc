@@ -6,19 +6,12 @@ The configuration file `vt-map-service.yaml` is a regular YAML file.
 Here is a template for the configuration:
 
 ```
-services:
-    root_path: /map-service
 storage:
     type: sqlite
     database: ./data/vt-map-service.db
 ```
 
 == Reference
-
-=== services
-`root_path`: string
-
-URL path of the service (e.g. /map-service)
 
 === storage
 `type`: "sqlite"

@@ -1,5 +1,3 @@
-services:
-    root_path: /map-service
 storage:
     # SQLite
     type: sqlite

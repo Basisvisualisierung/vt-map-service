@@ -23,7 +23,7 @@ service = Flask(__name__)
 with open('vt-map-service.yaml', 'r') as yaml_file:
     config = yaml.full_load(yaml_file)
 
-@service.route(config['services']['root_path']  + "/map", methods=['POST'])
+@service.route("/map", methods=['POST'])
 @cross_origin(origins='http://localhost:4200', methods='POST')
 def save_map():
     """Save map style and configuration to database."""
@@ -53,7 +53,7 @@ def save_map():
 
     return jsonify(response_data)
 
-@service.route(config['services']['root_path'] + "/config/<string:id>", methods=['GET'])
+@service.route("/config/<string:id>", methods=['GET'])
 @cross_origin(methods='GET')
 def get_map_config(id):
     """Get map configuration from database."""
@@ -78,7 +78,7 @@ def get_map_config(id):
     
     return jsonify(mapConfig)
 
-@service.route(config['services']['root_path'] + "/style/<string:id>", methods=['GET'])
+@service.route("/style/<string:id>", methods=['GET'])
 @cross_origin(methods='GET')
 def get_map_style(id):
     """Get map style from database."""
