@@ -6,6 +6,7 @@
 # Licensed under the European Union Public License (EUPL)
 # -------------------------------------------------------------------------------
 
+import os
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS, cross_origin
 import uuid
@@ -24,7 +25,6 @@ with open('vt-map-service.yaml', 'r') as yaml_file:
     config = yaml.full_load(yaml_file)
 
 @service.route("/map", methods=['POST'])
-@cross_origin(origins='http://localhost:4200', methods='POST')
 def save_map():
     """Save map style and configuration to database."""
     if not request.json:
@@ -101,6 +101,14 @@ def get_map_style(id):
     
     return jsonify(json.loads(data))
 
+@service.route("/search_params", methods=['GET'])
+def get_search_api_params():
+    """Get parameters for search API usage"""
+    search_params = {
+        'search_api': os.environ.get('VTMS_SEARCH_API'),
+        'search_api_key': os.environ.get('VTMS_SEARCH_API_KEY')
+    }
+    return jsonify(search_params)
 
 def is_valid_uuid(mapId):
     """Validate UUID"""

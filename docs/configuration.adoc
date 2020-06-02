@@ -21,3 +21,20 @@ Currently only SQLite can be used as database.
 `database`: string
 
 Path to SQLite file.
+
+= Environment variables
+
+The service can return parameters for a geolocation search API by its function _/search_params_. These API parameters must be set by the following environment variables:
+
+`VTMS_SEARCH_API`: string
+
+"ors" | "bkg"
+
+Geolocation API to use for address search.
+
+"ors": Openrouteservice +
+"bkg": BKG Geocoder
+
+`VTMS_SEARCH_API_KEY`: string
+
+Key / token to access the geolocation API.
