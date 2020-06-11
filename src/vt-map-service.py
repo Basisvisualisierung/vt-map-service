@@ -1,11 +1,12 @@
 # -------------------------------------------------------------------------------
 # VT Map Service
-# Version 0.5.0
+# Version 1.0.0 beta
 # 
 # Copyright 2020 Landesamt für Geoinformation und Landesvermessung Niedersachsen
 # Licensed under the European Union Public License (EUPL)
 # -------------------------------------------------------------------------------
 
+import os
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS, cross_origin
 import uuid
@@ -23,8 +24,7 @@ service = Flask(__name__)
 with open('vt-map-service.yaml', 'r') as yaml_file:
     config = yaml.full_load(yaml_file)
 
-@service.route(config['services']['root_path']  + "/map", methods=['POST'])
-@cross_origin(origins='http://localhost:4200', methods='POST')
+@service.route("/map", methods=['POST'])
 def save_map():
     """Save map style and configuration to database."""
     if not request.json:
@@ -49,13 +49,11 @@ def save_map():
             conn.close()
 
     if mapId is not None:
-        response_data = {'id': mapId,
-                         'style_url': config['services']['root_url'] + config['services']['root_path']  +  '/style/' + mapId, 
-                         'application_url': config['services']['map_view_url'] + '/' + mapId}
+        response_data = {'id': mapId}
 
     return jsonify(response_data)
 
-@service.route(config['services']['root_path'] + "/config/<string:id>", methods=['GET'])
+@service.route("/config/<string:id>", methods=['GET'])
 @cross_origin(methods='GET')
 def get_map_config(id):
     """Get map configuration from database."""
@@ -80,7 +78,7 @@ def get_map_config(id):
     
     return jsonify(mapConfig)
 
-@service.route(config['services']['root_path'] + "/style/<string:id>", methods=['GET'])
+@service.route("/style/<string:id>", methods=['GET'])
 @cross_origin(methods='GET')
 def get_map_style(id):
     """Get map style from database."""
@@ -103,6 +101,14 @@ def get_map_style(id):
     
     return jsonify(json.loads(data))
 
+@service.route("/search_params", methods=['GET'])
+def get_search_api_params():
+    """Get parameters for search API usage"""
+    search_params = {
+        'search_api': os.environ.get('VTMS_SEARCH_API'),
+        'search_api_key': os.environ.get('VTMS_SEARCH_API_KEY')
+    }
+    return jsonify(search_params)
 
 def is_valid_uuid(mapId):
     """Validate UUID"""
