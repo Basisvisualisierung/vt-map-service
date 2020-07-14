@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------------
 # VT Map Service
-# Version 1.0.0 beta
+# Version 1.0.0
 # 
 # Copyright 2020 Landesamt für Geoinformation und Landesvermessung Niedersachsen
 # Licensed under the European Union Public License (EUPL)

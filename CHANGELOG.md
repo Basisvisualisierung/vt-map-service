@@ -1,4 +1,4 @@
-## v1.0.0 (not released)
+## v1.0.0 (2020-07-14)
 
 ### Breaking changes
 * The section _services_ with the configuration parameters _root_url_, _root_path_ and _map_view_url_ was removed from configuration file _vt-map-service.yaml_.
