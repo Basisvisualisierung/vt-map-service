@@ -1,3 +1,9 @@
+geocoder:
+    suggest_params: 
+        count: 5
+        bbox: 6,52,12,54
+    search_params: 
+        bbox: 6,52,12,54
 storage:
     # SQLite
     type: sqlite

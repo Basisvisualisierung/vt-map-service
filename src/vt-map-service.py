@@ -13,6 +13,7 @@ import uuid
 import sqlite3
 import json
 import yaml
+import requests
 
 import create_db
 
@@ -109,6 +110,32 @@ def get_search_api_params():
         'search_api_key': os.environ.get('VTMS_SEARCH_API_KEY')
     }
     return jsonify(search_params)
+
+@service.route("/suggest", methods=['GET'])
+@cross_origin(methods='GET')
+def geocode_suggest():
+    """Get address suggestions"""
+    api = os.environ.get('VTMS_SEARCH_API')
+    api_key = os.environ.get('VTMS_SEARCH_API_KEY')
+    params = config['geocoder']['suggest_params']
+    
+    service_url = ''
+    if api == 'bkg':
+        service_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/suggest'
+        params['query'] = request.args.get('text', type = str)
+        params['outputformat'] = 'json'
+    elif api == 'ors':
+        service_url = 'https://api.openrouteservice.org/geocode/search'
+        params['api_key'] = api_key
+        params['text'] = request.args.get('text', type = str)
+    response = requests.get(service_url, params=params)
+    return response.json()
+
+@service.route("/search", methods=['GET'])
+def geocode_search():
+    """Search address"""
+    api = os.environ.get('VTMS_SEARCH_API')
+    api_key = os.environ.get('VTMS_SEARCH_API_KEY')
 
 def is_valid_uuid(mapId):
     """Validate UUID"""

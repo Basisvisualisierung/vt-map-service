@@ -6,6 +6,7 @@ RUN pip install Flask
 RUN pip install flask-cors
 RUN pip install gunicorn
 RUN pip install pyyaml
+RUN pip install requests
 
 EXPOSE 5000
 
