@@ -102,40 +102,66 @@ def get_map_style(id):
     
     return jsonify(json.loads(data))
 
-@service.route("/search_params", methods=['GET'])
-def get_search_api_params():
-    """Get parameters for search API usage"""
-    search_params = {
-        'search_api': os.environ.get('VTMS_SEARCH_API'),
-        'search_api_key': os.environ.get('VTMS_SEARCH_API_KEY')
-    }
-    return jsonify(search_params)
-
 @service.route("/suggest", methods=['GET'])
-@cross_origin(methods='GET')
-def geocode_suggest():
+def geocoder_suggest():
     """Get address suggestions"""
     api = os.environ.get('VTMS_SEARCH_API')
     api_key = os.environ.get('VTMS_SEARCH_API_KEY')
-    params = config['geocoder']['suggest_params']
+    params = config['geocoder']['suggest_params'] if config['geocoder']['suggest_params'] != None else {}
     
-    service_url = ''
+    # Define request url and parameters for geocoder service
+    geocoder_url = ''
     if api == 'bkg':
-        service_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/suggest'
-        params['query'] = request.args.get('text', type = str)
+        geocoder_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/suggest'
+        params['query'] = request.args.get('term', type = str)
         params['outputformat'] = 'json'
     elif api == 'ors':
-        service_url = 'https://api.openrouteservice.org/geocode/search'
+        geocoder_url = 'https://api.openrouteservice.org/geocode/search'
         params['api_key'] = api_key
-        params['text'] = request.args.get('text', type = str)
-    response = requests.get(service_url, params=params)
-    return response.json()
+        params['text'] = request.args.get('term', type = str)
+    
+    # Request geocoder
+    response = requests.get(geocoder_url, params=params)
+    
+    # Unify results from different services
+    suggestions = []
+    if api == 'bkg':
+        for item in response.json():
+            suggestions.append({'suggestion': item['suggestion']})
+    elif api == 'ors':
+        for item in json.loads(response.text)['features']:
+            suggestions.append({'suggestion': item['properties']['label']})
+
+    return jsonify({'suggestions': suggestions})
 
 @service.route("/search", methods=['GET'])
-def geocode_search():
+def geocoder_search():
     """Search address"""
     api = os.environ.get('VTMS_SEARCH_API')
     api_key = os.environ.get('VTMS_SEARCH_API_KEY')
+    params = config['geocoder']['search_params'] if config['geocoder']['search_params'] != None else {}
+    
+    # Define request url and parameters for geocoder service
+    geocoder_url = ''
+    if api == 'bkg':
+        geocoder_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/geosearch'
+        params['query'] = request.args.get('term', type = str)
+        params['outputformat'] = 'json'
+    elif api == 'ors':
+        geocoder_url = 'https://api.openrouteservice.org/geocode/search'
+        params['api_key'] = api_key
+        params['text'] = request.args.get('term', type = str)
+
+    # Request geocoder
+    response = requests.get(geocoder_url, params=params)
+
+    result = None
+    if api == 'bkg':
+        result = jsonify(response.json())
+    elif api == 'ors':
+        result = jsonify(json.loads(response.text))
+
+    return result
 
 def is_valid_uuid(mapId):
     """Validate UUID"""

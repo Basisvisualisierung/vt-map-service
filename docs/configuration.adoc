@@ -9,6 +9,31 @@ Here is a template for the configuration:
 storage:
     type: sqlite
     database: ./data/vt-map-service.db
+geocoder:
+    ### BKG Geocoder
+    suggest_params:        
+        count: 5
+        bbox: 6,51,12,54
+    search_params: 
+        bbox: 6,51,12,54
+    
+    ### Openrouteservice
+    #suggest_params:            
+    #    boundary.rect.min_lon: 6
+    #    boundary.rect.min_lat: 51
+    #    boundary.rect.max_lon: 12
+    #    boundary.rect.max_lat: 54
+    #    boundary.country: DE
+    #    layers: address
+    #    size: 5
+    #search_params: 
+    #    boundary.rect.min_lon: 6
+    #    boundary.rect.min_lat: 51
+    #    boundary.rect.max_lon: 12
+    #    boundary.rect.max_lat: 54
+    #    boundary.country: DE
+    #    layers: address
+    #    size: 5
 ```
 
 == Reference
