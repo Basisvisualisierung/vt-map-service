@@ -1,11 +1,11 @@
-## v2.0.0 (not released)
+## v1.1.0 (not released)
 ### Breaking changes
-* Function _/search_params_ was removed, due to the new search functions of this service. Parameters for an external geolocation search API are no longer requestable from the service.
+* Function _/search_params_ was removed, due to the new search functions of this service. Parameters for an external geocoder API are no longer requestable from the service.
 
 ### New Features
 * New function _/suggest_ for address suggestions. The function expects one parameter _term_ for the search term.
 * New function _/search_ for address search. The function expects one parameter _term_ for the search term.
-* New configuration section _geocoder_ to configure the parameters for the external geolocation search.
+* New configuration section _geocoder_ to configure the parameters for the external geocoder.
 
 ## v1.0.0 (2020-07-14)
 ### Breaking changes

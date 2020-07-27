@@ -11,6 +11,8 @@ storage:
     database: ./data/vt-map-service.db
 geocoder:
     ### BKG Geocoder
+    api: bkg
+    api_key:
     suggest_params:        
         count: 5
         bbox: 6,51,12,54
@@ -18,6 +20,8 @@ geocoder:
         bbox: 6,51,12,54
     
     ### Openrouteservice
+    #api: ors
+    #api_key:    
     #suggest_params:            
     #    boundary.rect.min_lon: 6
     #    boundary.rect.min_lat: 51
@@ -47,19 +51,41 @@ Currently only SQLite can be used as database.
 
 Path to SQLite file.
 
+=== geocoder
+`api`: string
+
+"ors" | "bkg"
+
+Geocoder API to use for address search.
+
+"ors": Openrouteservice +
+"bkg": BKG Geocoder
+
+`api_key`: string
+
+Key / token to access the geocoder API.
+
+`suggest_params`: associative array
+
+URL parameters for the suggest request to the geocoder can be added as scalars. The name of an attribute must correspond with an URL parameter or the geocoder API.
+
+`search_params`: associative array
+
+URL parameters for the search request to the geocoder can be added as scalars. The name of an attribute must correspond with an URL parameter or the geocoder API.
+
 = Environment variables
 
-The service can return parameters for a geolocation search API by its function _/search_params_. These API parameters must be set by the following environment variables:
+The configuration parameters _api_ and _api_key_ from the configuration section _geocoder_ can be overridden by the following environment variables:
 
 `VTMS_SEARCH_API`: string
 
 "ors" | "bkg"
 
-Geolocation API to use for address search.
+Geocoder API to use for address search.
 
 "ors": Openrouteservice +
 "bkg": BKG Geocoder
 
 `VTMS_SEARCH_API_KEY`: string
 
-Key / token to access the geolocation API.
+Key / token to access the geocoder API.

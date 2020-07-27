@@ -4,6 +4,8 @@ storage:
     database: ./data/vt-map-service.db
 geocoder:
     ### BKG Geocoder
+    api: bkg
+    api_key: 
     suggest_params:        
         count: 5
         bbox: 6,51,12,54
@@ -11,6 +13,8 @@ geocoder:
         bbox: 6,51,12,54
     
     ### Openrouteservice
+    #api: ors
+    #api_key:
     #suggest_params:            
     #    boundary.rect.min_lon: 6
     #    boundary.rect.min_lat: 51
