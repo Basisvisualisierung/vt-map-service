@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------------
 # VT Map Service
-# Version 1.0.0
+# Version 1.1.0
 # 
 # Copyright 2020 Landesamt für Geoinformation und Landesvermessung Niedersachsen
 # Licensed under the European Union Public License (EUPL)
@@ -13,6 +13,7 @@ import uuid
 import sqlite3
 import json
 import yaml
+import requests
 
 import create_db
 
@@ -101,14 +102,73 @@ def get_map_style(id):
     
     return jsonify(json.loads(data))
 
-@service.route("/search_params", methods=['GET'])
-def get_search_api_params():
-    """Get parameters for search API usage"""
-    search_params = {
-        'search_api': os.environ.get('VTMS_SEARCH_API'),
-        'search_api_key': os.environ.get('VTMS_SEARCH_API_KEY')
-    }
-    return jsonify(search_params)
+@service.route("/suggest", methods=['GET'])
+def geocoder_suggest():
+    """Get address suggestions"""
+    api = getGeocoderApi()
+    api_key = getGeocoderApiKey()
+    if api != '' or api != '':
+        params = config['geocoder']['suggest_params'] if config['geocoder']['suggest_params'] != None else {}
+        
+        # Define request url and parameters for geocoder service
+        geocoder_url = ''
+        if api == 'bkg':
+            geocoder_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/suggest'
+            params['query'] = request.args.get('term', type = str)
+            params['outputformat'] = 'json'
+        elif api == 'ors':
+            geocoder_url = 'https://api.openrouteservice.org/geocode/search'
+            params['api_key'] = api_key
+            params['text'] = request.args.get('term', type = str)
+        
+        # Request geocoder
+        response = requests.get(geocoder_url, params=params)
+        
+        # Unify results from different services
+        suggestions = []
+        if api == 'bkg':
+            for item in response.json():
+                suggestions.append({'suggestion': item['suggestion']})
+        elif api == 'ors':
+            for item in json.loads(response.text)['features']:
+                suggestions.append({'suggestion': item['properties']['label']})
+
+        return jsonify({'suggestions': suggestions})
+    else:
+        return jsonify({'error': 'Missing geocoder configuration'}), 500
+
+@service.route("/search", methods=['GET'])
+def geocoder_search():
+    """Search address"""
+    api = getGeocoderApi()
+    api_key = getGeocoderApiKey()
+
+    if api != '' or api != '':
+        params = config['geocoder']['search_params'] if config['geocoder']['search_params'] != None else {}
+        
+        # Define request url and parameters for geocoder service
+        geocoder_url = ''
+        if api == 'bkg':
+            geocoder_url = 'https://sg.geodatenzentrum.de/gdz_geokodierung__' + api_key + '/geosearch'
+            params['query'] = request.args.get('term', type = str)
+            params['outputformat'] = 'json'
+        elif api == 'ors':
+            geocoder_url = 'https://api.openrouteservice.org/geocode/search'
+            params['api_key'] = api_key
+            params['text'] = request.args.get('term', type = str)
+
+        # Request geocoder
+        response = requests.get(geocoder_url, params=params)
+
+        result = None
+        if api == 'bkg':
+            result = jsonify(response.json())
+        elif api == 'ors':
+            result = jsonify(json.loads(response.text))
+
+        return result
+    else:
+        return jsonify({'error': 'Missing geocoder configuration'}), 500
 
 def is_valid_uuid(mapId):
     """Validate UUID"""
@@ -128,3 +188,21 @@ def is_valid_config(mapConfig):
     if mapConfig.get('routing').get('enabled') == True and mapConfig.get('routing').get('configuration') is None:
         return False
     return True
+
+def getGeocoderApi():
+    """Get name of geocoder API from environment variable or configuration file"""
+    api = ''
+    if os.environ.get('VTMS_SEARCH_API') != None:
+        api = os.environ.get('VTMS_SEARCH_API')
+    elif config['geocoder']['api'] != None:
+        api = config['geocoder']['api']
+    return api
+
+def getGeocoderApiKey():
+    """Get key for geocoder API from environment variable or configuration file"""
+    api_key = ''
+    if os.environ.get('VTMS_SEARCH_API_KEY') != None:
+        api_key = os.environ.get('VTMS_SEARCH_API_KEY')
+    elif config['geocoder']['api_key'] != None:
+        api_key = config['geocoder']['api_key']
+    return api_key
