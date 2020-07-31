@@ -1,4 +1,4 @@
-## v1.1.0 (not released)
+## v1.1.0 (2020-07-31)
 ### Breaking changes
 * Function _/search_params_ was removed, due to the new search functions of this service. Parameters for an external geocoder API are no longer requestable from the service.
 
