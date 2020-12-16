@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------------
 # VT Map Service
-# Version 1.1.0
+# Version 1.1.1
 # 
 # Copyright 2020 Landesamt für Geoinformation und Landesvermessung Niedersachsen
 # Licensed under the European Union Public License (EUPL)
@@ -180,13 +180,11 @@ def is_valid_uuid(mapId):
 
 def is_valid_config(mapConfig):
     """Validate map configuration"""
-    mapFunctions = ('navigation', 'info', 'search', 'routing')
+    mapFunctions = ('navigation', 'info', 'search')
     # Check if configuration contains functions
     for func in mapFunctions:
         if mapConfig.get(func) is None or mapConfig.get(func).get('enabled') is None:
             return False 
-    if mapConfig.get('routing').get('enabled') == True and mapConfig.get('routing').get('configuration') is None:
-        return False
     return True
 
 def getGeocoderApi():
