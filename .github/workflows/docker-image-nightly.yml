@@ -1,4 +1,4 @@
-name: Publish and deploy Docker image RELEASE
+name: Publish and deploy Docker image NIGHTLY
 
 on:
   push:
